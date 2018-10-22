@@ -2,6 +2,7 @@
  
 var pluginName = "ik_suggest",
 	defaults = {
+		'instructions': "As you start typing the application might suggest similar search terms. Use up and down arrow keys to select a suggested search string.",
 		'minLength': 2,
 		'maxResults': 10,
 		'source': []
@@ -33,7 +34,13 @@ var pluginName = "ik_suggest",
 		
 		plugin = this;
 		
-		plugin.notify = $('<div/>') // add hidden live region to be used by screen readers
+		plugin.notify = $('<div/>')
+			
+		.attr({
+		'role': 'region',
+		'aria-live': 'polite'
+		})
+	
 			.addClass('ik_readersonly');
 		
 		$elem = plugin.element
@@ -64,6 +71,7 @@ var pluginName = "ik_suggest",
 		var plugin;
 		
 		plugin = event.data.plugin;
+		plugin.notify.text(plugin.options.instructions);
 
 	};
 	
@@ -114,7 +122,50 @@ var pluginName = "ik_suggest",
 		
 		plugin = event.data.plugin;
 		$me = $(event.currentTarget);
-			
+		switch (event.keyCode) {	
+			case ik_utils.keys.down: // select next suggestion from list    
+
+
+			selected = plugin.list.find('.selected');   
+
+
+			if(selected.length) {
+
+
+				msg = selected.removeClass('selected').next().addClass('selected').text();
+
+
+			} else {
+
+
+				msg = plugin.list.find('li:first').addClass('selected').text();
+
+
+			}
+
+			plugin.notify.text(msg); // add suggestion text to live region to be read by screen reader
+
+
+			break;
+
+
+			case ik_utils.keys.up: // select previous suggestion from list
+
+
+			selected = plugin.list.find('.selected');
+
+
+			if(selected.length) {
+
+
+				msg = selected.removeClass('selected').prev().addClass('selected').text();
+
+
+			}
+			plugin.notify.text(msg);  // add suggestion text to live region to be read by screen reader     
+			break;
+			default: // get suggestions based on user input
+
 				plugin.list.empty();
 				
 				suggestions = plugin.getSuggestions(plugin.options.source, $me.val());
@@ -129,7 +180,7 @@ var pluginName = "ik_suggest",
 				} else {
 					plugin.list.hide();
 				}
-
+				break;
 	};
 	
 	/** 
@@ -195,6 +246,12 @@ var pluginName = "ik_suggest",
 			}
 		}
 
+		
+	if (r.length > 1) { // add instructions to hidden live area
+	 this.notify.text('Suggestions are available for this field. Use up and down arrows to select a suggestion and enter key to use it.'); 
+		
+	}
+	
 		return r;
 		
 	};
