@@ -50,7 +50,6 @@
 			.attr({
 			'aria-hidden': 'true' // hide controls from screen readers
 			})
-	
 			.addClass('ik_controls')
 			.appendTo($elem);
 				
@@ -78,9 +77,7 @@
 				
 				$me.attr({
 				'aria-hidden': 'true' // hide images from screen readers
-				})
-	
-				$me.css({
+				}).css({
 						'background-image': 'url(' + $src + ')'
 					});	
 				
@@ -88,7 +85,10 @@
 					.on('click', {'plugin': plugin, 'slide': i}, plugin.gotoSlide)
 					.appendTo($navbar);
 
-				$('<div/>') // add instructions for screen reader users
+				
+								});
+
+								$('<div/>') // add instructions for screen reader users
 					.attr({
 					'id': id + '_instructions',
 					'aria-hidden': 'true'
@@ -96,7 +96,6 @@
 					.text(this.options.instructions)
 					.addClass('ik_readersonly')
 					.appendTo($elem);
-								});
 		
 		plugin.navbuttons = $navbar.children('li');
 		plugin.slides.first().addClass('active');
@@ -203,15 +202,14 @@
 			active
 			.attr({
 			       'aria-hidden': 'true'
-			 })
-			
-			active.off( ik_utils.getTransitionEventName() )
+			 }).off( ik_utils.getTransitionEventName() )
 				.removeClass(direction + ' active');
 				
-			next.removeClass('next')
+			next
 			.attr({
 				'aria-hidden': 'false'
-		  	})
+			  })
+			  .removeClass('next')
 				.addClass('active');
 			
 		});
